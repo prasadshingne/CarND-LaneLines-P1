@@ -30,9 +30,9 @@ My pipeline is described visually in the below image.
 
 3. Identify lines using HoughLinesP. 
 
-4. Additional functions average_pos() and m_b_points() identify lines with negative and positive slopes. All lines positive slope and positive slope are averaged to get the single left and right lines respectively. hough_lines() and draw_lines() are modified to reflect this change.
+4. Additional functions average_pos() and m_b_points() identify lines with negative and positive slopes. All lines with positive slope and negative slope are averaged to get the single left and right line respectively. hough_lines() and draw_lines() are modified to reflect this change.
 
-If you'd like to include images to show how the pipeline works, here is how to include an image: 
+Image describing pipeline: 
 
 ![alt text][image2]
 
@@ -40,7 +40,7 @@ If you'd like to include images to show how the pipeline works, here is how to i
 ### 2. Identify potential shortcomings with your current pipeline
 
 
-One potential shortcoming of the current pipeline could be that it may mis identify other features as lines on a sharp turn. This could be avoided by changing the mask shape based on certain conditions.
+One potential shortcoming of the current pipeline could be that it may mis-identify other features as lines on a sharp turn. This could be avoided by changing the mask shape based on certain conditions.
 
 
 ### 3. Suggest possible improvements to your pipeline
@@ -49,4 +49,4 @@ Couple of improvements come to mind for the current pipeline
 
 1. Currently the left and right lines appear jittery. This could be smoothed by averaging over multiple frames. Care must be taken to not smear out detail in doing so.
 
-2. Canny may misidentify lane lines due to large intensity changes present in other locations in the image than the lane. 
+2. Canny may mis-identify lane lines due to large intensity changes present in other locations in the image than the lane itself. 
