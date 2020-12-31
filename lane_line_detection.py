@@ -17,7 +17,14 @@ import cv2
 import os
 from moviepy.editor import VideoFileClip
 
+y_down= 615
+y_up  = 460
+# verts = [[[250,y_down],[530,y_up],[800,y_up],[1100, y_down]]]
+verts = [[[300,y_down],[580,y_up],[800,y_up],[1100, y_down]]]
 
+v     = np.asarray(verts)
+v1    = y_down
+v2    = y_up
 def grayscale(img):
     """Applies the Grayscale transform
     This will return an image with only one color channel
@@ -72,10 +79,12 @@ def average_pos(lines):
     
     def m_b_points(m,b):
         
-        y1 = 630
+        # y1 = 590
+        y1 = v1
         x1 = (y1-b)/ m
         
-        y2 = 460
+        # y2 = 450
+        y2 = v2
         x2 = (y2-b)/ m
         return int(x1),int(y1),int(x2),int(y2)
 
@@ -172,7 +181,7 @@ def process_image(image):
 
     # poly_vert                  = np.array([[[150,625],[525,460],[755,460],[1130, 625]]],dtype=np.int32)
     # poly_vert                  = np.array([[[150,625],[525,460],[755,460],[1130, 625]]],dtype=np.int32)
-    poly_vert                  = np.array([[[200,625],[530,460],[750,460],[1080, 625]]],dtype=np.int32)
+    poly_vert                  = np.array(verts,dtype=np.int32)
 
     image_canny_filtered, mask = region_of_interest(image_canny,poly_vert) 
     # mask1                      = mask.copy()
@@ -187,27 +196,36 @@ def process_image(image):
 
 # %%
 fig_ind  = 4
-file_list = os.listdir("./hwy880_test_frames/")
+dir_name = "./frames_20201229_test/"
+# file_list = os.listdir("./hwy880_test_frames/")
+file_list = os.listdir(dir_name)
 
-image = mpimg.imread("./hwy880_test_frames/"+ file_list[fig_ind])
+# image = mpimg.imread("./hwy880_test_frames/"+ file_list[fig_ind])
+image = mpimg.imread(dir_name+ file_list[fig_ind])
+
 print('This image is:', type(image), 'with dimensions:', image.shape)
 plt.imshow(image)
 # image     = mpimg.imread("./hwy880_test_frames/"+file_list[2])
-image     = mpimg.imread("./hwy880_test_frames/"+ file_list[fig_ind])
+# image     = mpimg.imread("./hwy880_test_frames/"+ file_list[fig_ind])
+image     = mpimg.imread(dir_name+ file_list[fig_ind])
+
 
 image_gray                 = grayscale(image)
 plt.imshow(image_gray)
 image_gaus                 = gaussian_blur(image_gray,7)
 plt.imshow(image_gaus)
-image_canny                = canny(image_gaus, 50,150)
+# image_canny                = canny(image_gaus, 50,150)
+image_canny                = canny(image_gaus, 100,250)
 
 # poly_vert                  = np.array([[[150,625],[525,460],[755,460],[1130, 625]]],dtype=np.int32)
-poly_vert                  = np.array([[[200,620],[530,460],[750,460],[1080, 630]]],dtype=np.int32)
+# poly_vert                  = np.array([[[200,625],[530,460],[750,460],[1080, 625]]],dtype=np.int32)
+# 20201227
+poly_vert                  = np.array(verts,dtype=np.int32)
 
 image_canny_filtered, mask = region_of_interest(image_canny,poly_vert) 
-mask1                      = mask.copy()
+# mask1                      = mask.copy()
 
-hough_img,lines = hough_lines(image_canny_filtered,rho=2,theta=np.pi/180,threshold=10, min_line_len=5,max_line_gap=45)
+hough_img,lines = hough_lines(image_canny_filtered,rho=2,theta=np.pi/180,threshold=15, min_line_len=15,max_line_gap=45)
 
 plt.figure(figsize=(20,14))
 plt.subplot(3,2,1)
@@ -232,9 +250,14 @@ plt.savefig('pipeline.png')
 
 # %%
 
-out_video = "Rec_20201223_113509_test_out.mp4"
-clip1 = VideoFileClip("Rec_20201223_113509_test.mp4")
-out_clip = clip1.fl_image(process_image) 
+# out_video = "Rec_20201223_113509_test_out.mp4"
+# clip1 = VideoFileClip("Rec_20201223_113509_test.mp4")
+# out_clip = clip1.fl_image(process_image) 
 
+# out_clip.write_videofile(out_video, audio=False)
+
+out_video = "Rec_20201229_162513_test_out.mp4"
+clip1 = VideoFileClip("Rec_20201229_162513_test.mp4")
+out_clip = clip1.fl_image(process_image) 
 out_clip.write_videofile(out_video, audio=False)
 
